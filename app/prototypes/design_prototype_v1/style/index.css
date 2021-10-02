@@ -1,0 +1,64 @@
+.bubble {
+  font-family: Calibri;
+  display: inline-block;
+  color: #ffffff;
+}
+
+.bubble.bounds {
+  border-radius: 100%;
+  width: 200px;
+  height: 200px;
+  background-color: #ed7d317f;
+}
+
+.bubble.name {
+  font-size: 50px;
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+.bubble.content {
+  position: relative;
+  top: -100%;
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.grid {
+  width: 100%;
+  display: -ms-grid;
+  display: grid;
+  gap: 1rem;
+  -ms-grid-columns: (minmax(10px, 1fr))[auto-fill];
+      grid-template-columns: repeat(auto-fill, minmax(10px, 1fr));
+}
+
+.gridItem {
+  background-color: rgba(72, 210, 30, 0.5);
+  border-radius: 100%;
+}
+
+body {
+  margin: 75px;
+}
+/*# sourceMappingURL=index.css.map */
