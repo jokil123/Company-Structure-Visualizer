@@ -1,33 +1,58 @@
 import * as d3 from "d3";
-import data from "../data/data.json";
+//import data from "../data/data.json";
 
-console.log(data);
+interface Node {
+  id: number;
+  name: string;
+  relations: string[];
+}
 
-let pack = (data: any) =>
-  d3.pack().size([500, 500]).padding(3)(
-    d3
-      .hierarchy(data)
-      .sum((d) => d.value)
-      .sort((a, b) => b.value - a.value)
-  );
+interface leafNode extends Node {
+  value: number;
+}
 
-let root = pack(data);
+interface branchNode extends Node {
+  children: (leafNode | branchNode)[];
+}
 
-const svg = d3.select("svg").attr("height", 1000).attr("width", 1000);
+let data: branchNode = {
+  id: 1,
+  name: "test",
+  relations: ["abc"],
+  children: [
+    {
+      id: 2,
+      name: "abc",
+      relations: [],
+      value: 10,
+    },
+  ],
+};
 
-svg
-  .selectAll()
-  .data(root)
+let hierarchy = d3.hierarchy(data, (d: branchNode) => {
+  return d.children;
+});
+
+let packackager = d3.pack().size([500, 500]);
+
+let layout = packackager(hierarchy);
+
+const svg = d3
+  .select("body")
+  .append("svg")
+  .attr("height", 500)
+  .attr("width", 500);
+
+let bubbles = svg
+  .selectAll("g")
+  .data(layout.descendants())
   .enter()
+  .append("g")
+  .attr("a", (d, i, e) => {d.data.});
+
+bubbles
   .append("circle")
-  .attr("r", function (d, i, e) {
-    console.log(d);
-    return d.r * 1;
-  })
-  .attr("transform", (d, i, e) => {
-    return `translate(${d.x}, ${d.y})`;
-  })
-  .attr("fill", (d, i, e) => {
-    return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
-  })
-  .style("opacity", "0.5");
+  .data(layout.descendants())
+  .attr("r", (d, i, e) => {
+    return d.r;
+  });
