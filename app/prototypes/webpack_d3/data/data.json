@@ -1,5 +1,5 @@
 {
-  "name": "Based",
+  "name": "Blum",
   "children": [
     {
       "name": "HR",
@@ -21,11 +21,13 @@
           "children": [
             {
               "name": "peter",
-              "value": 100
+              "value": 100,
+              "relations": ["Netzwerk SABA"]
             },
             {
               "name": "max",
-              "value": 100
+              "value": 100,
+              "relations": ["Netzwerk SABA"]
             }
           ]
         }
@@ -57,11 +59,13 @@
         },
         {
           "name": "Schneider",
-          "value": 100
+          "value": 100,
+          "relations": ["Netzwerk SABA"]
         },
         {
           "name": "Bischhof",
-          "value": 100
+          "value": 100,
+          "relations": ["Netzwerk SABA"]
         }
       ]
     },
