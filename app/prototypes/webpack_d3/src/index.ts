@@ -4,6 +4,7 @@ import "./index.scss";
 import { wrap } from "./svgTextWrap";
 import { drawRelationLine } from "./relationLine";
 import { Node, branchNode, leafNode } from "./nodeInterface";
+import { colorPalette } from "./colors";
 
 let data: branchNode = rawData;
 
@@ -16,7 +17,7 @@ let hierarchy = d3
   })
   .sort((a, b) => b.value - a.value);
 
-let packackager = d3.pack().size([1000, 1000]).padding(10);
+let packackager = d3.pack().size([1000, 1000]).padding(20);
 
 let layout = packackager(hierarchy);
 
@@ -41,7 +42,7 @@ let bubbles = svg
   .data(nodes)
   .enter()
   .append("g")
-  .attr("a", (d, i, e) => {
+  .attr("id", (d, i, e) => {
     let a = d.data.name;
     return a;
   })
@@ -55,7 +56,11 @@ bubbles
   .attr("r", (d, i, e) => {
     return d.r;
   })
-  .attr("fill", randomColor);
+  .attr("fill", (d, i, e) => {
+    return colorPalette(d.depth);
+  })
+  .style("opacity", "1")
+  .style("opacity", 0.75);
 
 bubbles
   .append("text")
@@ -69,7 +74,8 @@ bubbles
   .attr("text-anchor", "middle")
   .style("font-size", (d, i, e) => {
     return (d.r * 0.25) / (d.data.name.length * 0.01 + 1);
-  });
+  })
+  .attr("fill", "white");
 
 let relations: d3.HierarchyCircularNode<branchNode | leafNode>[][] = [];
 
@@ -79,12 +85,15 @@ nodes.forEach((e) => {
   }
 
   e.data.relations.forEach((r) => {
-    relations.push([
-      e,
-      nodes.find((n) => {
-        return n.data.name == r;
-      }),
-    ]);
+    let n = nodes.find((n) => {
+      return n.data.name == r;
+    });
+
+    if (n == undefined) {
+      throw new Error(`DATA ERROR: Cannot find Node "${r}"`);
+    }
+
+    relations.push([e, n]);
   });
 });
 
@@ -108,8 +117,6 @@ svg
       }
     );
   })
-  .attr("stroke", "black")
-  .attr("stroke-width", 3)
-  .style("opacity", 0.5);
-
-console.log(relations);
+  .attr("stroke", "white")
+  .attr("fill", "transparent")
+  .attr("stroke-width", 3);

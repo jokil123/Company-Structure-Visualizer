@@ -1,5 +1,5 @@
 {
-  "name": "Blum",
+  "name": "SUS",
   "children": [
     {
       "name": "HR",
@@ -27,7 +27,11 @@
             {
               "name": "max",
               "value": 100,
-              "relations": ["Netzwerk SABA"]
+              "relations": [
+                "Netzwerk ERFA-Lernen",
+                "Steuerteam BIC",
+                "HUB Absatz"
+              ]
             }
           ]
         }
@@ -46,16 +50,18 @@
       "name": "PE",
       "children": [
         {
-          "name": "Steuerteam am BIC",
+          "name": "Steuerteam BIC",
           "value": 150
         },
         {
           "name": "Maier",
-          "value": 100
+          "value": 100,
+          "relations": ["Steuerteam BIC", "HUB Absatz", "HUB Absatz"]
         },
         {
           "name": "Gerold",
-          "value": 100
+          "value": 100,
+          "relations": ["Steuerteam BIC", "HUB Absatz"]
         },
         {
           "name": "Schneider",
@@ -63,9 +69,9 @@
           "relations": ["Netzwerk SABA"]
         },
         {
-          "name": "Bischhof",
+          "name": "Müller",
           "value": 100,
-          "relations": ["Netzwerk SABA"]
+          "relations": ["Netzwerk SABA", "HUB Absatz"]
         }
       ]
     },
