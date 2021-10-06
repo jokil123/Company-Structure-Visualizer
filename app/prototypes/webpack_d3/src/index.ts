@@ -36,6 +36,19 @@ const svg = d3
   .attr("height", 1000)
   .attr("width", 1000);
 
+svg
+  .append("defs")
+  .append("marker")
+  .attr("id", "arrowhead")
+  .attr("markerWidth", 8)
+  .attr("markerHeight", 8)
+  .attr("refX", 7)
+  .attr("refY", 4)
+  .attr("orient", "auto")
+  .append("polygon")
+  .attr("points", "0 0, 8 4, 0 8")
+  .attr("fill", "#4472C4");
+
 let bubbles = svg
   .append("g")
   .selectAll("g")
@@ -59,7 +72,6 @@ bubbles
   .attr("fill", (d, i, e) => {
     return colorPalette(d.depth);
   })
-  .style("opacity", "1")
   .style("opacity", 0.75);
 
 bubbles
@@ -117,6 +129,7 @@ svg
       }
     );
   })
-  .attr("stroke", "white")
+  .attr("stroke", "#4472C4")
   .attr("fill", "transparent")
-  .attr("stroke-width", 3);
+  .attr("stroke-width", 1)
+  .attr("marker-end", "url(#arrowhead)");

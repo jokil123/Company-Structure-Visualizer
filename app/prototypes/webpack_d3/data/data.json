@@ -78,6 +78,10 @@
     {
       "name": "Netzwerk Saba",
       "value": 250
+    },
+    {
+      "name": "Lea",
+      "value": 200
     }
   ]
 }
