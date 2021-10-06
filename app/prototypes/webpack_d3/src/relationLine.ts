@@ -8,7 +8,8 @@ export const drawRelationLine = (
   startNode: { x: number; y: number; r: number },
   endNode: { x: number; y: number; r: number },
   snap: boolean = true,
-  snapSteps: number = 8
+  snapSteps: number = 8,
+  distanceSnapCutoff: number = 200
 ): string => {
   let unitV = v.Vec2.X_AXIS;
 
@@ -21,12 +22,11 @@ export const drawRelationLine = (
 
   let controlPointDistance =
     (v.dist(v.Vec2.ZERO, pathV) - startNode.r - endNode.r) / 2;
-  console.log(controlPointDistance);
 
   let startAngle = Math.atan2(det(unitV, dirAB), v.dot(unitV, dirAB));
   let endAngle = Math.atan2(det(unitV, dirBA), v.dot(unitV, dirBA));
 
-  if (snap) {
+  if (snap && v.dist(v.Vec2.ZERO, pathV) > distanceSnapCutoff) {
     startAngle = snapAngle(startAngle, snapSteps);
     endAngle = snapAngle(endAngle, snapSteps);
   }

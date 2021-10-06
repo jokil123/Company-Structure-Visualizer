@@ -1,9 +1,8 @@
 import * as d3 from "d3";
 import rawData from "../data/data.json";
 import "./index.scss";
-import { wrap } from "./svgTextWrap";
 import { drawRelationLine } from "./relationLine";
-import { Node, branchNode, leafNode } from "./nodeInterface";
+import { branchNode, leafNode } from "./nodeInterface";
 import { colorPalette } from "./colors";
 
 let data: branchNode = rawData;
@@ -17,18 +16,14 @@ let hierarchy = d3
   })
   .sort((a, b) => b.value - a.value);
 
-let packackager = d3.pack().size([1000, 1000]).padding(20);
+let packager = d3.pack().size([1000, 1000]).padding(20);
 
-let layout = packackager(hierarchy);
+let layout = packager(hierarchy);
 
 let nodes = layout.descendants().map((d) => {
+  d.data = { ...(<leafNode | branchNode>d.data), focus: false };
   return <d3.HierarchyCircularNode<leafNode | branchNode>>d;
 });
-
-const randomColor = () => {
-  return `hsla(${Math.random() * 360}, 84%, 56%, 100%) `;
-  //return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
-};
 
 const svg = d3
   .select("body")
