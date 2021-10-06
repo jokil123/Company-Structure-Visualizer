@@ -5,10 +5,10 @@ export interface Node {
   focus?: boolean;
 }
 
-export interface leafNode extends Node {
+export interface LeafNode extends Node {
   value: number;
 }
 
-export interface branchNode extends Node {
-  children: (leafNode | branchNode)[];
+export interface BranchNode extends Node {
+  children: (LeafNode | BranchNode)[];
 }

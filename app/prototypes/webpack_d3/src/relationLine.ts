@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { Node, branchNode, leafNode } from "./nodeInterface";
+import { Node, BranchNode, LeafNode } from "./nodeInterface";
 import * as v from "@thi.ng/vectors";
 import fe from "from-exponential";
 import { step, vec2 } from "@thi.ng/vectors";
