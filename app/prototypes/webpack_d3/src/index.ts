@@ -6,6 +6,7 @@ import { BranchNode, LeafNode } from "./nodeInterface";
 import { colorPalette } from "./colors";
 import { generateNodes } from "./generateNodes";
 import { findRelations } from "./findRelations";
+import { zoomToNode } from "./zoomToNode";
 
 const chart = (
   data: BranchNode,
@@ -33,11 +34,15 @@ const chart = (
 ) => {
   let nodes = generateNodes(data, size, style.chart.padding);
 
+  let baseZoomNode = nodes[0];
+  let zoomNode = nodes[0];
+
   const svg = d3
     .select("body")
     .append("svg")
     .attr("width", size[0])
-    .attr("height", size[1]);
+    .attr("height", size[1])
+    .attr("viewBox", `0 0 ${size[0]} ${size[1]}`);
 
   svg
     .append("defs")
@@ -77,9 +82,14 @@ const chart = (
     })
     .style("opacity", style.circle.opacity)
     // event stuff
-    .on("click", (e: Event, d) => {
-      d.data.focus = true;
-      console.log(e.target);
+    .on("dblclick", (e: Event, d) => {
+      if (d == zoomNode) {
+        zoomToNode(svg, baseZoomNode);
+        zoomNode = baseZoomNode;
+      } else {
+        zoomToNode(svg, d);
+        zoomNode = d;
+      }
     });
 
   bubbles
@@ -123,6 +133,8 @@ const chart = (
     .attr("fill", "transparent")
     .attr("stroke-width", style.relation.strokeWidth)
     .attr("marker-end", "url(#arrowhead)");
+
+  return svg;
 };
 
 let style = {
@@ -144,3 +156,7 @@ let style = {
 let styleSelected = {};
 
 chart(data, [1000, 1000], style);
+/*.transition()
+  .duration(1000)
+  .attr("viewBox", "250 250 1000 1000");
+*/
