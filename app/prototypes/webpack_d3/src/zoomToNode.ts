@@ -1,4 +1,5 @@
 import { hierarchy } from "d3-hierarchy";
+import { zoom } from "d3-zoom";
 import { BranchNode, LeafNode } from "./nodeInterface";
 
 export const zoomToNode = (
@@ -7,18 +8,25 @@ export const zoomToNode = (
     x: number;
     y: number;
     r: number;
-  }
+  },
+  duration: number = 500
 ): void => {
-  let canvasSize: [number, number] = [
-    parseFloat(zoomElement.attr("width")),
-    parseFloat(zoomElement.attr("height")),
-  ];
+  let canvasSize: [number, number];
+  try {
+    canvasSize = [
+      parseFloat(zoomElement.attr("width")),
+      parseFloat(zoomElement.attr("height")),
+    ];
+  } catch (TypeError) {
+    console.log("zoom failed");
+    return;
+  }
 
   let aspect = canvasSize[0] / canvasSize[1];
 
   let viewBoxSize: [number, number] = [0, 0];
 
-  if (canvasSize[0] >= canvasSize[1]) {
+  if (canvasSize[0] <= canvasSize[1]) {
     viewBoxSize[0] = node.r * 2;
     viewBoxSize[1] = viewBoxSize[0] * aspect;
   } else {
@@ -33,7 +41,7 @@ export const zoomToNode = (
 
   zoomElement
     .transition()
-    .duration(500)
+    .duration(duration)
     .attr(
       "viewBox",
       `${viewBoxStart[0]} ${viewBoxStart[1]} ${viewBoxSize[0]} ${viewBoxSize[1]}`

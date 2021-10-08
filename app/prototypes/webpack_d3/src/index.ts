@@ -134,6 +134,15 @@ const chart = (
     .attr("stroke-width", style.relation.strokeWidth)
     .attr("marker-end", "url(#arrowhead)");
 
+  let resize = () => {
+    svg.attr("width", window.innerWidth).attr("height", window.innerHeight);
+    zoomToNode(svg, zoomNode, 0);
+  };
+
+  window.addEventListener("resize", () => {
+    resize();
+  });
+  resize();
   return svg;
 };
 
@@ -155,8 +164,4 @@ let style = {
 
 let styleSelected = {};
 
-chart(data, [1000, 1000], style);
-/*.transition()
-  .duration(1000)
-  .attr("viewBox", "250 250 1000 1000");
-*/
+let dataChart = chart(data, [1000, 1000], style);
