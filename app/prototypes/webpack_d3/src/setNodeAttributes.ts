@@ -40,15 +40,17 @@ export const setNodeAttributes = (
     })
     .style("opacity", style.circle.opacity);
 
-  text.attr("fill", style.text.fill);
+  text.transition().duration(250).attr("fill", style.text.fill);
 
   relations
     .attr("stroke-width", style.relation.strokeWidth)
     .attr("stroke", style.relation.fill);
 
-  marker.attr("fill", style.relation.fill);
+  marker.transition().duration(250).attr("fill", style.relation.fill);
 
   circles
+    .transition()
+    .duration(250)
     .filter((d) => {
       return d.data.focus;
     })
@@ -56,12 +58,16 @@ export const setNodeAttributes = (
     .style("opacity", 1);
 
   text
+    .transition()
+    .duration(250)
     .filter((d) => {
       return d.data.focus;
     })
     .attr("fill", "black");
 
   relations
+    .transition()
+    .duration(250)
     .filter((d) => {
       return d.some((ref) => {
         if (ref.data.focus) {
