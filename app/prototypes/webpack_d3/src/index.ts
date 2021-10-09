@@ -2,11 +2,12 @@ import * as d3 from "d3";
 import data from "../data/data.json";
 import "./index.scss";
 import { drawRelationLine } from "./relationLine";
-import { BranchNode, LeafNode } from "./nodeInterface";
+import { BranchNode } from "./nodeInterface";
 import { colorPalette } from "./colors";
 import { generateNodes } from "./generateNodes";
 import { findRelations } from "./findRelations";
 import { zoomToNode } from "./zoomToNode";
+import { setNodeAttributes } from "./setNodeAttributes";
 
 const chart = (
   data: BranchNode,
@@ -106,6 +107,8 @@ const chart = (
       return (d.r * 0.25) / (d.data.name.length * 0.01 + 1);
     })
     .attr("fill", style.text.fill);
+
+  bubbles.call(setNodeAttributes);
 
   let relations = findRelations(nodes);
 
