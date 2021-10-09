@@ -52,8 +52,24 @@ export const setNodeAttributes = (
     .filter((d) => {
       return d.data.focus;
     })
-    .attr("fill", "black")
+    .attr("fill", "white")
     .style("opacity", 1);
+
+  text
+    .filter((d) => {
+      return d.data.focus;
+    })
+    .attr("fill", "black");
+
+  relations
+    .filter((d) => {
+      return d.some((ref) => {
+        if (ref.data.focus) {
+          return true;
+        }
+      });
+    })
+    .attr("stroke-width", 3);
 };
 
 const style = {
