@@ -2,38 +2,15 @@ import * as d3 from "d3";
 import data from "../data/data.json";
 import "./index.scss";
 import { drawRelationLine } from "./relationLine";
-import { BranchNode } from "./nodeInterface";
-import { colorPalette } from "./colors";
+import { BranchNode, LeafNode } from "./nodeInterface";
 import { generateNodes } from "./generateNodes";
 import { findRelations } from "./findRelations";
 import { zoomToNode } from "./zoomToNode";
 import { setNodeAttributes } from "./setNodeAttributes";
+import { ConcatenationScope } from "webpack";
 
-const chart = (
-  data: BranchNode,
-  size: [number, number],
-  style: {
-    chart: {
-      padding: number;
-    };
-    relation: {
-      fill: string;
-      strokeWidth: number;
-    };
-    circle: {
-      opacity: number;
-    };
-    text: {
-      fill: string;
-    };
-  },
-  styleSelected?: {
-    relation?: {};
-    circle?: {};
-    text?: {};
-  }
-) => {
-  let nodes = generateNodes(data, size, style.chart.padding);
+const chart = (data: BranchNode, size: [number, number], padding: number) => {
+  let nodes = generateNodes(data, size, padding);
 
   let baseZoomNode = nodes[0];
   let zoomNode = nodes[0];
@@ -55,8 +32,7 @@ const chart = (
     .attr("refY", 4)
     .attr("orient", "auto")
     .append("polygon")
-    .attr("points", "0 0, 8 4, 0 8")
-    .attr("fill", style.relation.fill);
+    .attr("points", "0 0, 8 4, 0 8");
 
   let bubbles = svg
     .append("g")
@@ -72,28 +48,14 @@ const chart = (
       return `translate(${d.x}, ${d.y})`;
     });
 
-  bubbles
+  let circles = bubbles
     .append("circle")
     .data(nodes)
     .attr("r", (d, i, e) => {
       return d.r;
-    })
-    .attr("fill", (d, i, e) => {
-      return colorPalette(d.depth);
-    })
-    .style("opacity", style.circle.opacity)
-    // event stuff
-    .on("dblclick", (e: Event, d) => {
-      if (d == zoomNode) {
-        zoomToNode(svg, baseZoomNode);
-        zoomNode = baseZoomNode;
-      } else {
-        zoomToNode(svg, d);
-        zoomNode = d;
-      }
     });
 
-  bubbles
+  let text = bubbles
     .append("text")
     .data(nodes)
     .text((d, i, e) => {
@@ -105,14 +67,11 @@ const chart = (
     .attr("text-anchor", "middle")
     .style("font-size", (d, i, e) => {
       return (d.r * 0.25) / (d.data.name.length * 0.01 + 1);
-    })
-    .attr("fill", style.text.fill);
-
-  bubbles.call(setNodeAttributes);
+    });
 
   let relations = findRelations(nodes);
 
-  svg
+  let relationPaths = svg
     .append("g")
     .selectAll("path")
     .data(relations)
@@ -132,10 +91,48 @@ const chart = (
         }
       );
     })
-    .attr("stroke", style.relation.fill)
     .attr("fill", "transparent")
-    .attr("stroke-width", style.relation.strokeWidth)
     .attr("marker-end", "url(#arrowhead)");
+
+  setNodeAttributes(
+    bubbles,
+    circles,
+    text,
+    relationPaths,
+    svg.select("defs").select("marker")
+  );
+
+  circles
+    .on("dblclick", (e: Event, d) => {
+      if (d) {
+        // 🤮
+        let dParsed = <d3.HierarchyCircularNode<BranchNode | LeafNode>>d;
+
+        if (dParsed == zoomNode) {
+          zoomToNode(svg, baseZoomNode);
+          zoomNode = baseZoomNode;
+        } else {
+          zoomToNode(svg, dParsed);
+          zoomNode = dParsed;
+        }
+      }
+    })
+    .on("click", (e: Event, d) => {
+      if (d) {
+        nodes.forEach((node) => {
+          node.data.focus = false;
+        });
+
+        (<d3.HierarchyCircularNode<BranchNode | LeafNode>>d).data.focus = true;
+        setNodeAttributes(
+          bubbles,
+          circles,
+          text,
+          relationPaths,
+          svg.select("defs").select("marker")
+        );
+      }
+    });
 
   let resize = () => {
     svg.attr("width", window.innerWidth).attr("height", window.innerHeight);
@@ -149,22 +146,4 @@ const chart = (
   return svg;
 };
 
-let style = {
-  chart: {
-    padding: 20,
-  },
-  relation: {
-    fill: "#4472C4",
-    strokeWidth: 1,
-  },
-  circle: {
-    opacity: 0.75,
-  },
-  text: {
-    fill: "white",
-  },
-};
-
-let styleSelected = {};
-
-let dataChart = chart(data, [1000, 1000], style);
+let dataChart = chart(data, [1000, 1000], 20);
