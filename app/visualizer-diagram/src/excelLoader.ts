@@ -16,7 +16,7 @@ const sizes: { [key: string]: number } = {
   department: 500,
 };
 
-export const loadJsonFile = async (e: Event) => {
+export const loadExcelFile = async (e: Event) => {
   let fileContentString = await readPromise(
     (<HTMLInputElement>e.target).files[0]
   );
@@ -26,11 +26,8 @@ export const loadJsonFile = async (e: Event) => {
   let sheet = workbook.Sheets[workbook.SheetNames[0]];
 
   let dimensions = sheet["!ref"].split(":");
-  console.log(dimensions);
 
   let contentSize = [3, parseInt(dimensions[1].match(/\d+/)[0])];
-
-  console.log(sheet);
 
   let elements: element[] = [];
 
@@ -77,4 +74,4 @@ export const loadJsonFile = async (e: Event) => {
   return topLevelNodes[0];
 };
 
-d3.select("#fileInput").on("input", loadJsonFile);
+d3.select("#fileInput").on("input", loadExcelFile);
