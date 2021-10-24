@@ -4,7 +4,6 @@ const path = require("path");
 module.exports = {
   entry: {
     backend: "./src/index.ts",
-    ui: "./src/ui.ts",
   },
   devtool: "inline-source-map",
   devServer: {

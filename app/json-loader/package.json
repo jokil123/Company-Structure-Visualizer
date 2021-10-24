@@ -1,5 +1,5 @@
 {
-  "name": "excel-loader",
+  "name": "json-loader",
   "version": "1.0.0",
   "description": "loads excel/table  files",
   "main": "index.js",

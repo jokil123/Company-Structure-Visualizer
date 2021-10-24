@@ -8,6 +8,9 @@ import { findRelations } from "./findRelations";
 import { zoomToNode } from "./zoomToNode";
 import { setNodeAttributes } from "./setNodeAttributes";
 import { ConcatenationScope } from "webpack";
+import { initFileLoading } from "./jsonLoader";
+
+initFileLoading();
 
 const chart = (data: BranchNode, size: [number, number], padding: number) => {
   let nodes = generateNodes(data, size, padding);
