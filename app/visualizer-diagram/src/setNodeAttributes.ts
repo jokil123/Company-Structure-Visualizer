@@ -1,8 +1,8 @@
-import { compileS } from "@thi.ng/vectors";
 import * as d3 from "d3";
 import { colorPalette } from "./colors";
 
 import { BranchNode, LeafNode } from "./nodeInterface";
+import { nodeTypeProperties, nodeTypes } from "./nodeTypes";
 
 export const setNodeAttributes = (
   groups: d3.Selection<
@@ -36,11 +36,18 @@ export const setNodeAttributes = (
 ) => {
   circles
     .attr("fill", (d, i, e) => {
-      return colorPalette(d.depth);
+      return colorPalette(d);
     })
-    .style("opacity", style.circle.opacity);
+    .style("opacity", (d, i, e) => {
+      if (d.data.type /* && !d.data.type == ""*/) {
+        return nodeTypeProperties[<nodeTypes>d.data.type].opacity;
+      } else {
+        return style.circle.opacity;
+      }
+    });
+  // .style("filter", "");
 
-  text.transition().duration(250).attr("fill", style.text.fill);
+  text.attr("fill", style.text.fill);
 
   relations
     .attr("stroke-width", style.relation.strokeWidth)
@@ -54,13 +61,15 @@ export const setNodeAttributes = (
     .filter((d) => {
       return d.data.focus;
     })
-    .attr("fill", "white")
+    // .style("filter", "hue-rotate(10deg) saturate(200%)");
+    .attr("fill", "#e6e6e6")
     .style("opacity", 1);
 
   text
     .transition()
     .duration(250)
     .filter((d) => {
+      console.log(d.data.focus);
       return d.data.focus;
     })
     .attr("fill", "black");
@@ -75,7 +84,7 @@ export const setNodeAttributes = (
         }
       });
     })
-    .attr("stroke-width", 3);
+    .attr("stroke-width", 5);
 };
 
 const style = {
@@ -84,7 +93,7 @@ const style = {
   },
   relation: {
     fill: "#4472C4",
-    strokeWidth: 1,
+    strokeWidth: 3,
   },
   circle: {
     opacity: 0.75,

@@ -8,12 +8,23 @@ export const findRelations = (
     d3.HierarchyCircularNode<BranchNode | LeafNode>
   ][] = [];
 
+  console.log(
+    nodes.map((node) => {
+      return node.data.name;
+    })
+  );
+
   nodes.forEach((e) => {
     if (!e.data.relations) {
       return;
     }
 
     e.data.relations.forEach((r) => {
+      console.log(r);
+      if (r == "") {
+        return;
+      }
+
       let n = nodes.find((n) => {
         return n.data.name == r;
       });

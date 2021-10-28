@@ -1,20 +1,16 @@
 import * as xlsx from "xlsx";
 import * as d3 from "d3";
 import { readPromise } from "./readAsTextPromise";
+import { nodeTypeProperties, nodeTypes } from "./nodeTypes";
 
 interface element {
   name: string;
-  type: string;
+  type: nodeTypes;
   parent: string;
   relations: string[];
   children?: element[];
   value?: number;
 }
-
-const sizes: { [key: string]: number } = {
-  person: 100,
-  department: 500,
-};
 
 export const loadExcelFile = async (e: Event) => {
   let fileContentString = await readPromise(
@@ -34,7 +30,9 @@ export const loadExcelFile = async (e: Event) => {
   for (let i = contentSize[0]; i <= contentSize[1]; i++) {
     elements.push({
       name: sheet[`A${i}`] ? (<string>sheet[`A${i}`].v).toLowerCase() : "",
-      type: sheet[`B${i}`] ? (<string>sheet[`B${i}`].v).toLowerCase() : "",
+      type: <nodeTypes>(
+        (sheet[`B${i}`] ? (<string>sheet[`B${i}`].v).toLowerCase() : "default")
+      ),
       parent: sheet[`C${i}`] ? (<string>sheet[`C${i}`].v).toLowerCase() : "",
       relations: sheet[`D${i}`]
         ? (<string>sheet[`D${i}`].v).split(",").map((relation: string) => {
@@ -68,7 +66,9 @@ export const loadExcelFile = async (e: Event) => {
   });
 
   elements.forEach((element) => {
-    element.value = sizes[element.type];
+    if (!element.children || element.children.length == 0) {
+      element.value = nodeTypeProperties[element.type].size;
+    }
   });
 
   return topLevelNodes[0];

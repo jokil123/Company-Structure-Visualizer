@@ -29,13 +29,13 @@ export const chart = (
     .append("defs")
     .append("marker")
     .attr("id", "arrowhead")
-    .attr("markerWidth", 8)
-    .attr("markerHeight", 8)
-    .attr("refX", 7)
-    .attr("refY", 4)
+    .attr("markerWidth", 6)
+    .attr("markerHeight", 6)
+    .attr("refX", 5)
+    .attr("refY", 3)
     .attr("orient", "auto")
     .append("polygon")
-    .attr("points", "0 0, 8 4, 0 8");
+    .attr("points", "0 0, 6 3, 0 6");
 
   let bubbles = svg
     .append("g")

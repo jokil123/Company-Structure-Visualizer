@@ -1,6 +1,13 @@
-export const colorPalette = (seed: number): string => {
-  //let colorPalette = ["264653", "2a9d8f", "e9c46a", "f4a261", "e76f51"];
-  let colorPalette = ["003049", "fcbf49", "f77f00", "d62828"];
+import { color } from "d3";
+import { BranchNode, LeafNode } from "./nodeInterface";
+import { nodeTypeProperties } from "./nodeTypes";
 
-  return `#${colorPalette[seed]}`;
+export const colorPalette = (
+  d: d3.HierarchyCircularNode<BranchNode | LeafNode>
+): string => {
+  let palette = ["#003049", "#fcbf49", "#f77f00", "#d62828"];
+
+  return nodeTypeProperties[d.data.type]
+    ? nodeTypeProperties[d.data.type].color
+    : palette[d.depth];
 };
